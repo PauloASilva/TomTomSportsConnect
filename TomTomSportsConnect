@@ -1,0 +1,11 @@
+#! /bin/bash
+
+docker run -it \
+    --privileged \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v /dev/bus/usb:/dev/bus/usb \
+    -e DISPLAY=unix$DISPLAY \
+    --name tomtomsc \
+    --rm \
+    tomtomsc:latest
+
