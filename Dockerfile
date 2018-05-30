@@ -43,6 +43,8 @@ RUN cp $POSTINST "$POSTINST.bak" && \
 # Cleanup
 RUN apt-get remove -y --purge wget && \
     apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
     rm -r /tmp/*
 
 ENV PATH="$PATH:/usr/local/TomTomSportsConnect/bin/"
