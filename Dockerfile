@@ -40,6 +40,17 @@ RUN cp $POSTINST "$POSTINST.bak" && \
     apt-get -f install
 #
 
+# inherit timezone from host system
+# docker build needs to be executed with "--build-arg LOCALTIMEZONE=Region/City"
+# e.g. "--build-arg LOCALTIMEZONE=Europe/Berlin" 
+# if docker build is invoked with bundled script "build_dockerimage.sh", LOCALTIMEZONE will
+# be get from host system
+ARG LOCALTIMEZONE
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -f tzdata
+RUN ln -fs /usr/share/zoneinfo/$LOCALTIMEZONE /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+
+
 # Cleanup
 RUN apt-get remove -y --purge wget && \
     apt-get autoremove -y && \
