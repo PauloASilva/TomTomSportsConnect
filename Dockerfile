@@ -29,9 +29,17 @@ RUN dpkg -i /tmp/$PACKAGE; exit 0
 ENV POSTINST=/var/lib/dpkg/info/tomtomsportsconnect.postinst
 
 RUN cp $POSTINST "$POSTINST.bak" && \
-    head -n-2 "$POSTINST.bak" > "$POSTINST"
+    head -n-2 "$POSTINST.bak" > "$POSTINST" && \
+    rm "$POSTINST.bak" && \
+    apt-get -f install
+#
 
-RUN apt-get -f install
+# Cleanup
+RUN apt-get remove -y --purge wget && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -r /tmp/*
 
 ENV PATH="$PATH:/usr/local/TomTomSportsConnect/bin/"
 

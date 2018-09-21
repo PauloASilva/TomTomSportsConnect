@@ -42,10 +42,13 @@ allowing TomTom Sports Connect usage wherever there's a running docker instance.
         --privileged \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
         -v /dev/bus/usb:/dev/bus/usb \
+        -v $HOME/TomTom\ Sports:/root/TomTom\ Sports \
+        -v $HOME/.local/share/TomTom/:/root/.local/share/TomTom/ \
+        -v /etc/localtime:/etc/localtime:ro \
         -e DISPLAY=unix$DISPLAY \
         --name tomtomsc \
         --rm \
-        TomTomSportsConnect
+        tomtomsc:latest
     ```
 
     **Note**: you may have to disable X access control to get the X11 forwarded.
