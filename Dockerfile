@@ -1,37 +1,31 @@
 # Base image
-FROM bitnami/minideb:stretch
+# See https://github.com/phusion/baseimage-docker
+FROM phusion/baseimage
 
 LABEL author="Paulo A. Silva"
 LABEL url="https://github.com/PauloASilva/TomTomSportsConnect"
 LABEL description="Containerized TomTom Sports Connect"
 
+RUN apt-get update && apt-get install wget
+
 ENV PACKAGE="tomtomsportsconnect.x86_64.deb"
 ENV URL="https://sports.tomtom-static.com/downloads/desktop/mysportsconnect/latest/$PACKAGE"
 
-WORKDIR "/tmp"
-
 # Handle dependencies
-RUN install_packages \
+RUN apt-get install -y \
     network-manager \
+    libgstreamer0.10-0 \
+    libgstreamer-plugins-base0.10-0 \
     libgl1-mesa-glx \
     "libxslt1.1" \
-    "libsm6" \
-    liborc-0.4-0 \
-    iso-codes \
-    libxrender1 \
-    libxcomposite-dev \
-    wget
+    "libsm6"
 
-RUN wget --quiet http://fr.archive.ubuntu.com/ubuntu/pool/main/g/gst-plugins-base0.10/libgstreamer-plugins-base0.10-0_0.10.36-1_amd64.deb
-RUN wget --quiet http://fr.archive.ubuntu.com/ubuntu/pool/universe/g/gstreamer0.10/libgstreamer0.10-0_0.10.36-1.5ubuntu1_amd64.deb
+RUN curl -Lk -o /tmp/$PACKAGE $URL
 
-RUN dpkg -i libgstreamer*.deb
+RUN dpkg -i /tmp/$PACKAGE; exit 0
 
-# Install TomTom Sports Connect
-RUN wget --quiet --no-check-certificate $URL
-RUN dpkg -i $PACKAGE; exit 0
-
-# postinstall workaround: disable udevadm
+# Fix postinstall
+## Disable udevadm
 ENV POSTINST=/var/lib/dpkg/info/tomtomsportsconnect.postinst
 
 RUN cp $POSTINST "$POSTINST.bak" && \

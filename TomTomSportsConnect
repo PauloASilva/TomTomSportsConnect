@@ -1,6 +1,6 @@
 #! /bin/bash
 
-docker run -d \
+docker run -it \
     --privileged \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v /dev/bus/usb:/dev/bus/usb \
