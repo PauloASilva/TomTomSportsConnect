@@ -6,6 +6,7 @@ docker run -it \
     -v /dev/bus/usb:/dev/bus/usb \
     -v $HOME/TomTom\ Sports:/root/TomTom\ Sports \
     -v $HOME/.local/share/TomTom/:/root/.local/share/TomTom/ \
+    -v /etc/localtime:/etc/localtime:ro \
     -e DISPLAY=unix$DISPLAY \
     --name tomtomsc \
     --rm \
